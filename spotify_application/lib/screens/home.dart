@@ -39,6 +39,7 @@ class  Home extends StatelessWidget {
     return Container(
       height: 400,
       child: GridView.count(
+        childAspectRatio: ,
         children: createListofCategories(),
         crossAxisCount: 2,
       ),
