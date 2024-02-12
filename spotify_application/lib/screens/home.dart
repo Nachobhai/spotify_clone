@@ -1,6 +1,9 @@
+
 import 'package:flutter/material.dart';
 import 'package:spotify_application/models/category.dart';
+import 'package:spotify_application/models/music.dart';
 import 'package:spotify_application/services/category_operations.dart';
+import 'package:spotify_application/services/music_operations.dart';
 
 class  Home extends StatelessWidget {
   const Home({super.key});
@@ -25,7 +28,12 @@ class  Home extends StatelessWidget {
       child: Row(
         children: [
           Image.network(category.imageURL, fit: BoxFit.cover),
-          Text(category.name, style: TextStyle(color: Colors.white),)
+          Padding(
+            padding: EdgeInsets.only(left: 10),
+            child: Text(
+              category.name, 
+              style: TextStyle(color: Colors.white),),
+          )
         ],)
     );
   }
@@ -35,11 +43,43 @@ class  Home extends StatelessWidget {
     return categories;
   }
 
+  Widget createMusic(Music music){
+    return Padding(
+      padding: EdgeInsets.all(5),
+      child: Column(
+        children: [
+          Container(
+            height: 100,
+            width: 100,
+            child: Image.network(
+              music.image, fit: BoxFit.cover,)),
+          Text(music.name),
+          Text(music.desc)
+        ],
+      ),
+    );
+  }
+
+  Widget createMusicList(String label){
+    List<Music> musicList = MusicOperations.getMusic();
+    return Container(
+      height: 300,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (ctx, index){
+          return createMusic(musicList[index]);
+      }, itemCount: musicList.length,),
+    );
+  }
+
   Widget createGrid(){
     return Container(
-      height: 400,
+      height: 300,
+      padding: EdgeInsets.all(10),
       child: GridView.count(
-        childAspectRatio: ,
+        childAspectRatio: 5/2,
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
         children: createListofCategories(),
         crossAxisCount: 2,
       ),
@@ -47,12 +87,14 @@ class  Home extends StatelessWidget {
   }
   @override
   Widget build(BuildContext context) {
+  
     return SafeArea (
       child: Container(
         child: Column(children: [
           createAppBar('Good Morning'), 
           SizedBox(height: 5,),
-          createGrid()
+          createGrid(),
+          createMusicList('Music For You')
         ], ),
         decoration: BoxDecoration(
           gradient: LinearGradient(colors: [
